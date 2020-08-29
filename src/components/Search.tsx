@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-const StyledSearch = styled.div`
+const StyledSearch = styled.input`
   grid-area: search;
 `;
 
-export default () => <StyledSearch>search</StyledSearch>;
+type SearchProps = InputHTMLAttributes<HTMLInputElement> &
+  Required<Pick<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>>;
+
+export default (props: SearchProps) => (
+  <StyledSearch
+    className="full-width"
+    autoFocus
+    name="gsearch"
+    type="search"
+    placeholder="Search for books to add to your reading list and press Enter"
+    {...props}
+  />
+);

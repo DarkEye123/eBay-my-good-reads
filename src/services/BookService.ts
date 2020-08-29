@@ -1,6 +1,6 @@
 import { client } from './NetworkService';
 
-interface Book {
+export interface Book {
   image: string;
   title: string;
   author: string;
@@ -14,7 +14,7 @@ interface BookListAPIResponse {
 }
 
 export default class BookService {
-  url = '/volumes';
+  url = '/books/v1/volumes';
   async getBooksByType(type: string): Promise<BookListAPIResponse> {
     try {
       const types: Book[] = await client.get(this.url + `?q=${type}`);

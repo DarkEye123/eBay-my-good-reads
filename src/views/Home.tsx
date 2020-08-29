@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Search from '../components/Search';
 import BookList from '../components/BookList';
@@ -21,7 +21,7 @@ const StyledHomeView = styled.div`
       'search wishlist'
       'book-list wishlist';
     grid-template-rows: ${({ theme }) => `${theme.sizes[8]} 1fr`};
-    grid-template-columns: ${({ theme }) => `3fr 1fr`};
+    grid-template-columns: 3fr 1fr;
     row-gap: ${({ theme }) => theme.sizes[8]};
     column-gap: ${({ theme }) => theme.sizes[20]};
     height: ${({ theme }) =>
@@ -30,13 +30,18 @@ const StyledHomeView = styled.div`
 `;
 
 export default function Home() {
+  const [bookType, setBookType] = useState('')
+  function handleSearchOnChange(e: ChangeEvent<HTMLInputElement>) {
+    setBookType(e.currentTarget.value)
+  }
+
   return (
     <StyledHomeView>
       <header>
         <h1>My Good Reads</h1>
       </header>
       <main>
-        <Search></Search>
+        <Search value={bookType} onChange={handleSearchOnChange}></Search>
         <BookList></BookList>
         <WishList></WishList>
       </main>
