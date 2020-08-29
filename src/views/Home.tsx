@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Search from '../components/Search';
 import BookList from '../components/BookList';
@@ -30,13 +30,18 @@ const StyledHomeView = styled.div`
 `;
 
 export default function Home() {
+  const [bookType, setBookType] = useState('')
+  function handleSearchOnChange(e: ChangeEvent<HTMLInputElement>) {
+    setBookType(e.currentTarget.value)
+  }
+
   return (
     <StyledHomeView>
       <header>
         <h1>My Good Reads</h1>
       </header>
       <main>
-        <Search></Search>
+        <Search value={bookType} onChange={handleSearchOnChange}></Search>
         <BookList></BookList>
         <WishList></WishList>
       </main>
