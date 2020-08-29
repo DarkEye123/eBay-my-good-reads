@@ -1,6 +1,6 @@
 import { client } from './NetworkService';
 
-interface Book {
+export interface Book {
   image: string;
   title: string;
   author: string;

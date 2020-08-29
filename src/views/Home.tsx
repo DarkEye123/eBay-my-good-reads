@@ -21,7 +21,7 @@ const StyledHomeView = styled.div`
       'search wishlist'
       'book-list wishlist';
     grid-template-rows: ${({ theme }) => `${theme.sizes[8]} 1fr`};
-    grid-template-columns: ${({ theme }) => `3fr 1fr`};
+    grid-template-columns: 3fr 1fr;
     row-gap: ${({ theme }) => theme.sizes[8]};
     column-gap: ${({ theme }) => theme.sizes[20]};
     height: ${({ theme }) =>
