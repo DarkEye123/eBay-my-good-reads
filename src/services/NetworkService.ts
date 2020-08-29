@@ -6,7 +6,7 @@ export interface NetworkError {
 }
 
 export const client = axios.create({
-  baseURL: 'https://www.googleapis.com/books/v1',
+  baseURL: process.env.REACT_APP_BACKEND_URL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

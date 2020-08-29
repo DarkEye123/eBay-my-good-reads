@@ -1,20 +1,27 @@
 import React from 'react';
-import './styles/App.scss';
-import BookSearch from './book-search/BookSearch';
+import styled, { ThemeProvider } from 'styled-components';
+import theme from './theme';
+
+// import BookSearch from './book-search/BookSearch';
+
+const StyledApp = styled.div`
+  header {
+    color: ${({ theme }) => theme.color.main};
+  }
+`;
 
 function App() {
   return (
-      <div>
-        <header className="header">
-          <div className="header--content">
-            <h1>My Good Reads</h1>
-          </div>
+    <ThemeProvider theme={theme}>
+      <StyledApp>
+        <header>
+          <h1>My Good Reads</h1>
         </header>
         <main>
-          <BookSearch/>
+          <div>dummy</div>
         </main>
-
-      </div>
+      </StyledApp>
+    </ThemeProvider>
   );
 }
 
