@@ -18,6 +18,7 @@ declare module 'styled-components' {
       bold: number;
     };
     fontSizes: {
+      xxs: string;
       xs: string;
       sm: string;
       md: string;
@@ -41,7 +42,8 @@ declare module 'styled-components' {
       xs: string;
       sm: string;
       xl: string;
-      full: string;
+      xxl: string;
+      '3xl': string;
     };
   }
 }

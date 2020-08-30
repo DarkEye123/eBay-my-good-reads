@@ -13,7 +13,8 @@ const sizes = {
   xs: '2rem',
   sm: '4rem',
   xl: '6.25rem',
-  full: '100%',
+  xxl: '10rem',
+  '3xl': '15rem',
   // '3xs': '14rem',
   // '2xs': '16rem',
   // xs: '20rem',
@@ -38,6 +39,7 @@ const theme: DefaultTheme = {
     bold: 700,
   },
   fontSizes: {
+    xxs: '10px',
     xs: '12px',
     sm: '14px',
     md: '16px',

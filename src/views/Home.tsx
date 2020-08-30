@@ -11,7 +11,7 @@ const DEBOUNCE_LIMIT = 500;
 const StyledHomeView = styled.div`
   height: 100vh;
   header {
-    width: ${({ theme }) => theme.sizes.full};
+    width: 100%;
     display: flex;
     justify-content: center;
     background-color: ${({ theme }) => theme.color.lightAccent};

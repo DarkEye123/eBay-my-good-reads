@@ -9,7 +9,9 @@ import theme from '../theme';
 const StyledBookList = styled.div`
   grid-area: book-list;
   display: grid;
-  grid-template-rows: ${({ theme }) => theme.sizes.sm};
+  grid-template-rows: auto;
+  grid-auto-rows: auto;
+  grid-row-gap: ${({ theme }) => theme.space.xs};
   .spinner {
     align-self: center;
     justify-self: center;
@@ -33,7 +35,6 @@ export default () => {
         </>
       )) || (
         <>
-          <button onClick={() => actions.fetchBooks('js')}>xxx</button>
           <VisuallyHidden>Search Results</VisuallyHidden>
           {state.books.map(book => (
             <Book key={book.id} book={book}></Book>
