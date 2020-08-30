@@ -1,8 +1,8 @@
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import Home from "./views/Home";
-import theme from "./theme";
-import { StateProvider as BookStateProvider } from "./store";
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Home from './views/Home';
+import theme from './theme';
+import { StateProvider as BookStateProvider } from './store';
 
 function App() {
   return (
