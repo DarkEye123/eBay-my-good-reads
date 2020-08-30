@@ -6,6 +6,8 @@ import BookList from '../components/BookList';
 import WishList from '../components/WishList';
 import { store } from '../store';
 
+const DEBOUNCE_LIMIT = 500;
+
 const StyledHomeView = styled.div`
   height: 100vh;
   header {
@@ -18,16 +20,16 @@ const StyledHomeView = styled.div`
   }
   main {
     display: grid;
-    padding: ${({ theme }) => theme.space[16]};
+    padding: ${({ theme }) => theme.space.xl};
     grid-template-areas:
       'search wishlist'
       'book-list wishlist';
-    grid-template-rows: ${({ theme }) => `${theme.sizes[8]} 1fr`};
+    grid-template-rows: ${({ theme }) => `${theme.sizes.xs} 1fr`};
     grid-template-columns: 3fr 1fr;
-    row-gap: ${({ theme }) => theme.space[8]};
-    column-gap: ${({ theme }) => theme.space[20]};
+    row-gap: ${({ theme }) => theme.space.lg};
+    column-gap: ${({ theme }) => theme.space.xxl};
     height: ${({ theme }) =>
-      `calc(100% - ${theme.space[20]} - 2*${theme.space[16]})`};
+      `calc(100% - ${theme.space.xxl} - 2*${theme.space.xl})`};
   }
 `;
 
@@ -35,9 +37,10 @@ export default function Home() {
   const [bookType, setBookType] = useState('');
   const { actions } = useContext(store);
 
-  const debouncedFetchBooks = useMemo(() => debounce(actions.fetchBooks, 500), [
-    actions.fetchBooks,
-  ]);
+  const debouncedFetchBooks = useMemo(
+    () => debounce(actions.fetchBooks, DEBOUNCE_LIMIT),
+    [actions.fetchBooks],
+  );
 
   function handleSearchOnChange(e: ChangeEvent<HTMLInputElement>) {
     setBookType(e.currentTarget.value);

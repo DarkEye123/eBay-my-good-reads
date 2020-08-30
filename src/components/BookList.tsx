@@ -9,7 +9,7 @@ import theme from '../theme';
 const StyledBookList = styled.div`
   grid-area: book-list;
   display: grid;
-  grid-template-rows: ${({ theme }) => theme.sizes[16]};
+  grid-template-rows: ${({ theme }) => theme.sizes.sm};
   .spinner {
     align-self: center;
     justify-self: center;
