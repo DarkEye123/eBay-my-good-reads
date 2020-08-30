@@ -13,12 +13,12 @@ export interface Book {
 interface BookAPIResponse {
   id: string;
   volumeInfo: {
-    imageLinks: { smallThumbnail: string };
-    title: string;
-    authors: string[];
-    publisher: string;
-    publishedDate: string;
-    description: string;
+    imageLinks?: { smallThumbnail?: string };
+    title?: string;
+    authors?: string[];
+    publisher?: string;
+    publishedDate?: string;
+    description?: string;
   };
 }
 
@@ -35,11 +35,11 @@ function fromAPI(responses: BookAPIResponse[]): Book[] {
     image: `${
       volumeInfo.imageLinks ? volumeInfo.imageLinks.smallThumbnail : ''
     }`,
-    authors: volumeInfo.authors,
-    description: volumeInfo.description,
-    published: volumeInfo.publishedDate,
-    publisher: volumeInfo.publisher,
-    title: volumeInfo.title,
+    authors: volumeInfo.authors || ['unknown author'],
+    description: volumeInfo.description || 'no description',
+    published: volumeInfo.publishedDate || 'unknown publish date',
+    publisher: volumeInfo.publisher || 'unknown publisher',
+    title: volumeInfo.title || 'unknown title',
   }));
 }
 
@@ -50,7 +50,8 @@ class BookService {
       const { data } = (await networkServiceClient.get(
         this.url + `?q=${type}`,
       )) as BookListAPIResponse;
-      console.log(data.items);
+      // console.log(data.items);
+      console.log(fromAPI(data.items || []));
       return fromAPI(data.items || []);
     } catch (e) {
       // TODO error
