@@ -1,28 +1,67 @@
-import { client } from './NetworkService';
+import { client as networkServiceClient } from './NetworkService';
 
 export interface Book {
+  id: string;
   image: string;
   title: string;
-  author: string;
+  authors: string[];
   publisher: string;
   published: string;
   description: string;
 }
 
-interface BookListAPIResponse {
-  books: Book[];
+interface BookAPIResponse {
+  id: string;
+  volumeInfo: {
+    imageLinks: { smallThumbnail: string };
+    title: string;
+    authors: string[];
+    publisher: string;
+    publishedDate: string;
+    description: string;
+  };
 }
 
-export default class BookService {
+interface BookListAPIResponse {
+  data: {
+    items: BookAPIResponse[];
+    totalItems: number;
+  };
+}
+
+function fromAPI(responses: BookAPIResponse[]): Book[] {
+  return responses.map(({ id, volumeInfo }) => ({
+    id,
+    image: `${
+      volumeInfo.imageLinks ? volumeInfo.imageLinks.smallThumbnail : ''
+    }`,
+    authors: volumeInfo.authors,
+    description: volumeInfo.description,
+    published: volumeInfo.publishedDate,
+    publisher: volumeInfo.publisher,
+    title: volumeInfo.title,
+  }));
+}
+
+class BookService {
   url = '/books/v1/volumes';
-  async getBooksByType(type: string): Promise<BookListAPIResponse> {
+  async getBooksByType(type: string): Promise<Book[]> {
     try {
-      const types: Book[] = await client.get(this.url + `?q=${type}`);
-      return { books: types };
+      const { data } = (await networkServiceClient.get(
+        this.url + `?q=${type}`,
+      )) as BookListAPIResponse;
+      console.log(data.items);
+      return fromAPI(data.items || []);
     } catch (e) {
       // TODO error
-      console.error('error');
+      // 429 too many requests
+      // 400
+      console.error('error', e);
+      throw e;
     }
-    return { books: [] };
   }
 }
+
+const client = new BookService();
+
+export { client };

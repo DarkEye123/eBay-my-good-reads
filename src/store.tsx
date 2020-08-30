@@ -1,6 +1,6 @@
 // store.js
 import React, { createContext, useReducer, FC } from 'react';
-import { Book } from './services/BookService';
+import { client as bookServiceClient, Book } from './services/BookService';
 
 interface Action {
   type: string;
@@ -11,17 +11,22 @@ interface AddToWishListAction {
   payload: Book;
 }
 
+interface FetchBooksActionFulfilled {
+  payload: Book[];
+}
+
 interface WishListActionList {
   addToWishList: (book: Book) => void;
 }
 
 interface BookListActionList {
-  fetchBooks: () => void;
+  fetchBooks: (type: string) => void;
 }
 
 interface AppState {
   whishList: Book[];
   books: Book[];
+  isLoading: boolean; // generalization of the loading state for whole app - derived from book request
 }
 
 type AppActions = WishListActionList & BookListActionList;
@@ -34,45 +39,66 @@ interface AppCtx {
 const store = createContext<AppCtx>({} as AppCtx);
 const { Provider } = store;
 
+const reducer = (state: AppState, action: Action) => {
+  switch (action.type) {
+    case 'addToWishList':
+      const whishList = [
+        ...state.whishList,
+        (action as AddToWishListAction).payload,
+      ];
+      return { ...state, whishList };
+    case 'fetchBooks.pending':
+      return { ...state, isLoading: true };
+    case 'fetchBooks.fulfilled':
+      return {
+        ...state,
+        isLoading: false,
+        books: (action as FetchBooksActionFulfilled).payload,
+      };
+    case 'fetchBooks.rejected':
+      return state;
+    default:
+      throw new Error();
+  }
+};
+
 /**
- * This book app is small and there is low frequency of state updates. Therefore React ctx approach is good regarding cost/perf.
+ * Little note:
+ * This book app is small and there is low frequency of state updates. Therefore React ctx approach is good regarding cost/perf in my opinion.
+ * I'm aware that e.g. redux has solutions similar to ones I have here (and of course, much more robust & bulletproof)
  */
 const StateProvider: FC = ({ children }) => {
-  const initialState: AppCtx = {
-    state: { books: [], whishList: [] },
-    actions: {
-      addToWishList,
-      fetchBooks,
-    },
-  };
-  const [state, dispatch] = useReducer(
-    (state: AppState, action: Action) => {
-      switch (action.type) {
-        case 'addToWishList':
-          const whishList = [
-            ...state.whishList,
-            (action as AddToWishListAction).payload,
-          ];
-          return { ...state, whishList };
-        default:
-          throw new Error();
-      }
-    },
-    { ...initialState.state },
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    books: [],
+    whishList: [],
+    isLoading: false,
+  });
 
   function addToWishList(book: Book) {
     dispatch({ type: 'addToWishList', payload: book });
   }
 
   // TODO - pagination?
-  function fetchBooks() {
-    dispatch({ type: 'fetchBooks' });
+  async function fetchBooks(type: string) {
+    dispatch({ type: 'fetchBooks.pending' });
+    try {
+      const books = await bookServiceClient.getBooksByType(type);
+      dispatch({ type: 'fetchBooks.fulfilled', payload: books });
+    } catch (e) {
+      dispatch({ type: 'fetchBooks.rejected', payload: [] });
+    }
   }
 
   return (
-    <Provider value={{ actions: initialState.actions, state: state }}>
-      {/* {console.log('rerender', state)} */}
+    <Provider
+      value={{
+        actions: {
+          addToWishList,
+          fetchBooks,
+        },
+        state,
+      }}
+    >
       {children}
     </Provider>
   );
