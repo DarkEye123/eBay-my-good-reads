@@ -7,11 +7,6 @@ const StyledWishList = styled.div`
 `;
 
 export default () => {
-  const { state, actions } = useContext(store);
-  return (
-    <StyledWishList>
-      {/* {console.log('rerender from wishlist')} */}
-      {state.books.length}
-    </StyledWishList>
-  );
+  const { state } = useContext(store);
+  return <StyledWishList>{state.books.length}</StyledWishList>;
 };

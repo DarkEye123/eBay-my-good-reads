@@ -1,8 +1,10 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useContext, useMemo } from 'react';
 import styled from 'styled-components';
+import debounce from 'lodash.debounce';
 import Search from '../components/Search';
 import BookList from '../components/BookList';
 import WishList from '../components/WishList';
+import { store } from '../store';
 
 const StyledHomeView = styled.div`
   height: 100vh;
@@ -16,23 +18,30 @@ const StyledHomeView = styled.div`
   }
   main {
     display: grid;
-    padding: ${({ theme }) => theme.sizes[16]};
+    padding: ${({ theme }) => theme.space[16]};
     grid-template-areas:
       'search wishlist'
       'book-list wishlist';
     grid-template-rows: ${({ theme }) => `${theme.sizes[8]} 1fr`};
     grid-template-columns: 3fr 1fr;
-    row-gap: ${({ theme }) => theme.sizes[8]};
-    column-gap: ${({ theme }) => theme.sizes[20]};
+    row-gap: ${({ theme }) => theme.space[8]};
+    column-gap: ${({ theme }) => theme.space[20]};
     height: ${({ theme }) =>
-      `calc(100% - ${theme.sizes[20]} - 2*${theme.sizes[16]})`};
+      `calc(100% - ${theme.space[20]} - 2*${theme.space[16]})`};
   }
 `;
 
 export default function Home() {
-  const [bookType, setBookType] = useState('')
+  const [bookType, setBookType] = useState('');
+  const { actions } = useContext(store);
+
+  const debouncedFetchBooks = useMemo(() => debounce(actions.fetchBooks, 500), [
+    actions.fetchBooks,
+  ]);
+
   function handleSearchOnChange(e: ChangeEvent<HTMLInputElement>) {
-    setBookType(e.currentTarget.value)
+    setBookType(e.currentTarget.value);
+    debouncedFetchBooks(e.currentTarget.value);
   }
 
   return (
