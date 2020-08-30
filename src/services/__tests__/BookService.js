@@ -1,34 +1,72 @@
-import BookService from '../BookService';
-import { client } from '../NetworkService';
+import { client as bookServiceClient } from '../BookService';
+import { client as networServiceClient } from '../NetworkService';
 
 jest.mock('../NetworkService');
 
-let service;
+describe('books fetching', () => {
+  test('returns empty list if error occurs', async () => {
+    networServiceClient.get.mockRejectedValueOnce('random error');
 
-beforeAll(() => {
-  service = new BookService();
+    let ret = bookServiceClient.getBooksByType('');
+    expect(ret).toBeInstanceOf(Promise);
+
+    expect(ret).rejects.toEqual('random error');
+  });
+
+  test('returns empty list if no volume is specified', async () => {
+    networServiceClient.get.mockResolvedValueOnce({ data: [] });
+
+    let ret = bookServiceClient.getBooksByType('');
+    expect(ret).toBeInstanceOf(Promise);
+
+    let books = await ret;
+    expect(books).toBeInstanceOf(Array);
+    expect(books.length).toBe(0);
+  });
 });
 
-test('returns empty list if error occurs', async () => {
-  client.get.mockRejectedValueOnce(new Error('random error'));
+describe('book API response', () => {
+  test('converts to Book', async () => {
+    const resp = {
+      id: 'test',
+      volumeInfo: {
+        imageLinks: { smallThumbnail: 'test' },
+        authors: ['test'],
+        description: 'test',
+        publishedDate: '1990',
+        publisher: 'test',
+        title: 'test',
+      },
+    };
 
-  let ret = service.getBooksByType('');
-  expect(ret).toBeInstanceOf(Promise);
+    networServiceClient.get.mockResolvedValueOnce({ data: { items: [resp] } });
 
-  ret = await ret;
-  expect(ret).toHaveProperty('books');
-  expect(ret.books).toBeInstanceOf(Array);
-  expect(ret.books.length).toBe(0);
-});
+    let ret = bookServiceClient.getBooksByType('asd');
+    expect(ret).toBeInstanceOf(Promise);
 
-test('returns empty list if no volume is specified', async () => {
-  client.get.mockResolvedValueOnce([]);
+    let books = await ret;
+    expect(books).toBeInstanceOf(Array);
+    expect(books.length).toBe(1);
 
-  let ret = service.getBooksByType('');
-  expect(ret).toBeInstanceOf(Promise);
-
-  ret = await ret;
-  expect(ret).toHaveProperty('books');
-  expect(ret.books).toBeInstanceOf(Array);
-  expect(ret.books.length).toBe(0);
+    const book = books[0];
+    const objKeys = [
+      'id',
+      'image',
+      'title',
+      'authors',
+      'publisher',
+      'published',
+      'description',
+    ];
+    objKeys.forEach(k => {
+      expect(book[k]).toBeTruthy();
+      if (k === 'authors') {
+        expect(book[k]).toBeInstanceOf(Array);
+      } else if (k === 'published') {
+        expect(book[k]).toBe('1990');
+      } else {
+        expect(book[k]).toBe('test');
+      }
+    });
+  });
 });

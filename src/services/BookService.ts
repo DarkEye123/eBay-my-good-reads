@@ -51,7 +51,7 @@ class BookService {
         this.url + `?q=${type}`,
       )) as BookListAPIResponse;
       // console.log(data.items);
-      console.log(fromAPI(data.items || []));
+      // console.log(fromAPI(data.items || []));
       return fromAPI(data.items || []);
     } catch (e) {
       // TODO error
