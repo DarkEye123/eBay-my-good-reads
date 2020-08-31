@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
+import { darken } from 'polished';
 import Search from '../components/Search';
 import BookList from '../components/BookList';
 import WishList from '../components/WishList';
@@ -14,8 +15,8 @@ const StyledHomeView = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-    background-color: ${({ theme }) => theme.color.lightAccent};
-    color: ${({ theme }) => theme.color.lightShades};
+    background-color: ${({ theme }) => darken(0.04, theme.color.lightAccent)};
+    color: white;
     height: 5rem;
   }
   main {
