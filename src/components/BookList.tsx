@@ -11,7 +11,7 @@ const StyledBookList = styled.div`
   display: grid;
   grid-template-rows: auto;
   grid-auto-rows: auto;
-  grid-row-gap: ${({ theme }) => theme.space.xs};
+  grid-row-gap: ${({ theme }) => theme.space.md};
   .spinner {
     align-self: center;
     justify-self: center;

@@ -10,6 +10,7 @@ const space = {
 };
 
 const sizes = {
+  xxs: '1rem',
   xs: '2rem',
   sm: '4rem',
   xl: '6.25rem',
