@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 interface DescriptionProps {
   readonly maxLines: number;
   readonly isOverflowing: boolean;
+  readonly showFullDetail: boolean;
 }
 
 const Book = styled.div`
@@ -38,7 +39,12 @@ const Date = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.xxs};
 `;
 
-const Authors = styled.div`
+const Metadata = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Left = styled.div`
   ${({ theme }) => css`
     display: grid;
     grid-auto-flow: column;
@@ -47,11 +53,18 @@ const Authors = styled.div`
     max-width: ${theme.sizes['3xl']};
     letter-spacing: 0.5px;
     font-size: ${theme.fontSizes.xxs};
+    color: ${theme.color.darkShades};
   `}
 `;
 
+const Right = styled.div`
+  letter-spacing: 0.5px;
+  font-size: ${({ theme }) => theme.fontSizes.xxs};
+  color: black;
+`;
+
 const Description = styled.div<DescriptionProps>`
-  ${({ isOverflowing, maxLines, theme }) => css`
+  ${({ isOverflowing, showFullDetail, maxLines, theme }) => css`
     position: relative;
     font-size: ${theme.fontSizes.sm};
     border: 1px ${theme.color.darkAccent} solid;
@@ -67,9 +80,15 @@ const Description = styled.div<DescriptionProps>`
       overflow: hidden;
       max-height: ${maxLines}.6em;
       height: ${!isOverflowing && '100%'};
-      transition: max-height 0.2s;
+      transition: max-height 0.3s;
       line-height: 1.2em;
       text-align: justify;
+      ${showFullDetail &&
+      css`
+        overflow: auto;
+        height: initial;
+        max-height: 400px;
+      `}
     }
 
     button {
@@ -81,7 +100,9 @@ const Description = styled.div<DescriptionProps>`
 export default {
   Book,
   Info,
-  Authors,
+  Left,
+  Right,
   Date,
   Description,
+  Metadata,
 };

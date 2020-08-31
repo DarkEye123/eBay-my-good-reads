@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import Styled from './styles';
 import useTextOverflow from '../../hooks/useTextOverflow';
 import Button from '../Button';
@@ -9,7 +9,6 @@ interface BookProps {
 }
 
 const Book: FC<BookProps> = ({ book }) => {
-  const MAX_HEIGHT = '400px';
   const MAX_LINES = 3;
 
   const date = new Date(book.published).getFullYear() || book.published;
@@ -18,32 +17,32 @@ const Book: FC<BookProps> = ({ book }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   function toggleShowFullDescription() {
-    if (isOverflowing && textRef.current) {
-      setShowFullDescription(prev => !prev);
-      if (!showFullDescription) {
-        textRef.current.style.maxHeight = MAX_HEIGHT;
-        textRef.current.style.overflow = 'auto';
-      } else {
-        textRef.current.style.maxHeight = `${MAX_LINES}.6em`;
-        textRef.current.style.overflow = 'hidden';
-      }
-    }
+    setShowFullDescription(v => !v);
   }
 
   return (
     <Styled.Book>
-      <img alt={`${book.title} cover`} src={book.image} />
+      <div>
+        <img alt={`${book.title} cover`} src={book.image} />
+      </div>
       <Styled.Info>
         <h3>{book.title}</h3>
-        <Styled.Authors>
-          {book.authors?.map((author, index, authors) => (
-            <span key={`${book.id}-${author}`}>{`${
-              index === authors.length - 1 ? author : author + ','
-            }`}</span>
-          ))}
-          <Styled.Date>- {date}</Styled.Date>
-        </Styled.Authors>
-        <Styled.Description isOverflowing={isOverflowing} maxLines={MAX_LINES}>
+        <Styled.Metadata>
+          <Styled.Left>
+            {book.authors?.map((author, index, authors) => (
+              <span key={`${book.id}-${author}`}>{`${
+                index === authors.length - 1 ? author : author + ','
+              }`}</span>
+            ))}
+            <Styled.Date>- {date}</Styled.Date>
+          </Styled.Left>
+          <Styled.Right>{book.publisher}</Styled.Right>
+        </Styled.Metadata>
+        <Styled.Description
+          isOverflowing={isOverflowing}
+          showFullDetail={showFullDescription}
+          maxLines={MAX_LINES}
+        >
           <span ref={textRef}>{book.description}</span>
           {isOverflowing && (
             <Button onClick={toggleShowFullDescription}>
