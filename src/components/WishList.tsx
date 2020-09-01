@@ -6,6 +6,12 @@ import { darken } from 'polished';
 const StyledWishList = styled.aside`
   ${({ theme }) => css`
     grid-area: wishlist;
+    margin-top: ${theme.space.md};
+    margin-bottom: ${theme.space.md};
+    @media only screen and (min-width: ${theme.breakpoints.md}) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
     background-color: ${theme.color.lightShades};
 
     div {

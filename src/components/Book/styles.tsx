@@ -8,13 +8,9 @@ interface DescriptionProps {
 
 const Book = styled.div`
   ${({ theme }) => css`
-    clear: both;
     display: flex;
     padding: ${theme.space.sm};
     background-color: ${theme.color.lightShades};
-    img {
-      min-width: ${theme.sizes.xl};
-    }
   `}
 `;
 
@@ -26,16 +22,22 @@ const Info = styled.div`
     flex-direction: column;
     h3 {
       color: ${theme.color.lightAccent};
-      font-size: ${theme.fontSizes.lg};
-      line-height: 1.3;
-      letter-spacing: 0.5px;
+      font-size: ${theme.fontSizes.sm};
+      @media only screen and (min-width: ${theme.breakpoints.sm}) {
+        font-size: ${theme.fontSizes.lg};
+        letter-spacing: 0.5px;
+        line-height: 1.3;
+      }
+      line-height: 1;
       margin-bottom: ${theme.space.xs};
     }
   `}
 `;
 
 const Date = styled.span`
-  letter-spacing: 0.5px;
+  @media only screen and (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    letter-spacing: 0.5px;
+  }
   font-size: ${({ theme }) => theme.fontSizes.xxs};
 `;
 
@@ -51,14 +53,18 @@ const Left = styled.div`
     column-gap: ${theme.space.xs};
     grid-auto-columns: max-content;
     max-width: ${theme.sizes['3xl']};
-    letter-spacing: 0.5px;
+    @media only screen and (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+      letter-spacing: 0.5px;
+    }
     font-size: ${theme.fontSizes.xxs};
     color: ${theme.color.darkShades};
   `}
 `;
 
 const Right = styled.div`
-  letter-spacing: 0.5px;
+  @media only screen and (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    letter-spacing: 0.5px;
+  }
   font-size: ${({ theme }) => theme.fontSizes.xxs};
   color: black;
 `;
@@ -66,7 +72,10 @@ const Right = styled.div`
 const Description = styled.div<DescriptionProps>`
   ${({ isOverflowing, showFullDetail, maxLines, theme }) => css`
     position: relative;
-    font-size: ${theme.fontSizes.sm};
+    @media only screen and (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+      font-size: ${theme.fontSizes.sm};
+    }
+    font-size: ${theme.fontSizes.xs};
     border: 1px ${theme.color.darkAccent} solid;
     border-radius: 10px;
     margin-top: ${theme.space.md};
@@ -97,6 +106,28 @@ const Description = styled.div<DescriptionProps>`
   `}
 `;
 
+const ImageWrapper = styled.div`
+  ${({ theme }) => css`
+    img {
+      width: 0;
+      visibility: collapse;
+      @media only screen and (min-width: ${theme.breakpoints.xs}) {
+        visibility: visible;
+        min-width: ${theme.sizes.sm};
+        width: ${theme.sizes.sm};
+      }
+      @media only screen and (min-width: ${theme.breakpoints.sm}) {
+        min-width: ${theme.sizes.xl};
+        width: ${theme.sizes.xl};
+      }
+      @media only screen and (min-width: ${theme.breakpoints.md}) {
+        min-width: ${theme.sizes.xl};
+        width: inherit;
+      }
+    }
+  `}
+`;
+
 export default {
   Book,
   Info,
@@ -105,4 +136,5 @@ export default {
   Date,
   Description,
   Metadata,
+  ImageWrapper,
 };

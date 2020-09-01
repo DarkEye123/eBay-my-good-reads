@@ -11,7 +11,7 @@ declare module 'styled-components' {
       lightAccent: string;
       lightShades: string;
     };
-    breakpoints: { sm: string; md: string; lg: string; xl: string };
+    breakpoints: { xs: string; sm: string; md: string; lg: string; xl: string };
     fontWeights: {
       normal: number;
       medium: number;

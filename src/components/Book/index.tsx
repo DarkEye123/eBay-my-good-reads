@@ -23,9 +23,9 @@ const Book: FC<BookProps> = ({ onWishListAppend, book }) => {
 
   return (
     <Styled.Book tabIndex={0} onKeyPress={onWishListAppend}>
-      <div>
+      <Styled.ImageWrapper>
         <img alt={`${book.title} cover`} src={book.image} />
-      </div>
+      </Styled.ImageWrapper>
       <Styled.Info>
         <h3>{book.title}</h3>
         <Styled.Metadata>
