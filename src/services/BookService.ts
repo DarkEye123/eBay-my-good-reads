@@ -39,14 +39,17 @@ function fromAPI(responses: BookAPIResponse[]): Book[] {
 class BookService {
   url = '/books/v1/volumes';
   async getBooksByType(type: string): Promise<Book[]> {
+    if (type.length === 0) {
+      return [];
+    }
     try {
       const { data } = (await networkServiceClient.get(
         this.url + `?q=${type}`,
       )) as BookListAPIResponse;
       return fromAPI(data.items || []);
     } catch (e) {
-      console.error('error', e);
       reportServiceClient.logError(e.toString());
+      console.error('error', e);
       throw e;
     }
   }

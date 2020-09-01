@@ -1,20 +1,31 @@
 import { client as bookServiceClient } from '../BookService';
-import { client as networServiceClient } from '../NetworkService';
+import { client as networkServiceClient } from '../NetworkService';
+import { client as reportingServiceClient } from '../ReportingService';
 
 jest.mock('../NetworkService');
+jest.mock('../ReportingService');
+beforeEach(() => {
+  networkServiceClient.get.mockReset(); // without this, tests will fail
+});
 
 describe('books fetching', () => {
-  test('returns empty list if error occurs', async () => {
-    networServiceClient.get.mockRejectedValueOnce('random error');
+  test('throws error', async () => {
+    networkServiceClient.get.mockRejectedValueOnce(Error('random error'));
 
-    let ret = bookServiceClient.getBooksByType('');
+    const ret = bookServiceClient.getBooksByType('test');
     expect(ret).toBeInstanceOf(Promise);
 
     expect(ret).rejects.toEqual('random error');
   });
 
+  test('calls reporting service if error occurs', async () => {
+    networkServiceClient.get.mockRejectedValueOnce(Error('test'));
+    bookServiceClient.getBooksByType('x');
+    expect(reportingServiceClient.logError).toBeCalled();
+  });
+
   test('returns empty list if no volume is specified', async () => {
-    networServiceClient.get.mockResolvedValueOnce({ data: [] });
+    networkServiceClient.get.mockResolvedValueOnce({ data: [] });
 
     let ret = bookServiceClient.getBooksByType('');
     expect(ret).toBeInstanceOf(Promise);
@@ -39,7 +50,7 @@ describe('book API response', () => {
       },
     };
 
-    networServiceClient.get.mockResolvedValueOnce({ data: { items: [resp] } });
+    networkServiceClient.get.mockResolvedValueOnce({ data: { items: [resp] } });
 
     let ret = bookServiceClient.getBooksByType('asd');
     expect(ret).toBeInstanceOf(Promise);
