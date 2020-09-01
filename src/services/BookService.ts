@@ -1,14 +1,5 @@
 import { client as networkServiceClient } from './NetworkService';
-
-export interface Book {
-  id: string;
-  image: string;
-  title: string;
-  authors: string[];
-  publisher: string;
-  published: string;
-  description: string;
-}
+import { Book } from '../types';
 
 interface BookAPIResponse {
   id: string;
@@ -40,6 +31,7 @@ function fromAPI(responses: BookAPIResponse[]): Book[] {
     published: volumeInfo.publishedDate || 'unknown publish date',
     publisher: volumeInfo.publisher || 'unknown publisher',
     title: volumeInfo.title || 'unknown title',
+    wishlisted: false,
   }));
 }
 
@@ -50,8 +42,6 @@ class BookService {
       const { data } = (await networkServiceClient.get(
         this.url + `?q=${type}`,
       )) as BookListAPIResponse;
-      // console.log(data.items);
-      // console.log(fromAPI(data.items || []));
       return fromAPI(data.items || []);
     } catch (e) {
       // TODO error

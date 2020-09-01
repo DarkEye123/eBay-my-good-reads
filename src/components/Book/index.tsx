@@ -1,8 +1,7 @@
 import React, { FC, useState, useRef } from 'react';
 import Styled from './styles';
 import useTextOverflow from '../../hooks/useTextOverflow';
-import Button from '../Button';
-import { Book as BookType } from '../../services/BookService';
+import { Book as BookType } from '../../types';
 
 interface BookProps {
   book: BookType;
