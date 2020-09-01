@@ -22,20 +22,25 @@ export default () => {
   const { state, actions } = useContext(store);
 
   return (
-    <StyledBookList>
+    <StyledBookList data-testid="booklist">
       {(state.isLoading && (
         <>
-          <VisuallyHidden>Loading</VisuallyHidden>
+          <VisuallyHidden data-testid="booklist-hidden-loading">
+            Loading
+          </VisuallyHidden>
           <ReactLoading
             type={'spinningBubbles'}
             color={theme.color.darkAccent}
             className="spinner"
             aria-hidden
+            data-testid="booklist-loading"
           />
         </>
       )) || (
         <>
-          <VisuallyHidden>Search Results</VisuallyHidden>
+          <VisuallyHidden data-testid="booklist-hidden-results-info">
+            Search Results
+          </VisuallyHidden>
           {state.books.map(book => (
             <Book
               key={book.id}

@@ -12,7 +12,9 @@ type SearchProps = InputHTMLAttributes<HTMLInputElement> &
 export default (props: SearchProps) => (
   <>
     <VisuallyHidden>
-      <label htmlFor="search">Search bar</label>
+      <label htmlFor="search" data-testid="search-label">
+        Search bar
+      </label>
     </VisuallyHidden>
     <StyledSearch
       className="full-width"
@@ -22,6 +24,7 @@ export default (props: SearchProps) => (
       id="search"
       type="search"
       placeholder="Search for books to add to your reading list and press Enter"
+      data-testid="search-input"
       {...props}
     />
   </>

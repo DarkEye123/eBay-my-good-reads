@@ -59,25 +59,30 @@ export default () => {
   }, []);
 
   return (
-    <StyledWishList>
+    <StyledWishList data-testid="wishlist">
       <div>
         <h2>Wish List</h2>
         {/* menu needs menuitems, empty menu is bad for accessibility, that is why this strange solution */}
-        {(state.whishList.length > 0 && (
-          <ul role="menu">
-            {state.whishList.map(book => (
+        {(state.wishList.length > 0 && (
+          <ul role="menu" data-testid="wishlist">
+            {state.wishList.map(book => (
               <li
                 role="menuitem"
                 tabIndex={0}
                 onClick={() => actions.addToWishList(book)}
                 onKeyPress={() => actions.addToWishList(book)}
                 key={book.id}
+                data-testid="wishlist-item"
               >
                 {book.title}
               </li>
             ))}
           </ul>
-        )) || <span className="centered">Empty (╯°□°)╯︵ ┻━┻</span>}
+        )) || (
+          <span className="centered" data-testid="wishlist-empty-text">
+            Empty (╯°□°)╯︵ ┻━┻
+          </span>
+        )}
       </div>
     </StyledWishList>
   );

@@ -22,37 +22,51 @@ const Book: FC<BookProps> = ({ onWishListAppend, book }) => {
   }
 
   return (
-    <Styled.Book tabIndex={0} onKeyPress={onWishListAppend}>
+    <Styled.Book tabIndex={0} onKeyPress={onWishListAppend} data-testid="book">
       <Styled.ImageWrapper>
-        <img alt={`${book.title} cover`} src={book.image} />
+        <img
+          alt={`${book.title} cover`}
+          src={book.image}
+          data-testid="cover-image"
+        />
       </Styled.ImageWrapper>
       <Styled.Info>
-        <h3>{book.title}</h3>
+        <h3 data-testid="book-title">{book.title}</h3>
         <Styled.Metadata>
           <Styled.Left>
             {book.authors?.map((author, index, authors) => (
-              <span key={`${book.id}-${author}`}>{`${
+              <span key={`${book.id}-${author}`} data-testid="book-author">{`${
                 index === authors.length - 1 ? author : author + ','
               }`}</span>
             ))}
-            <Styled.Date>- {date}</Styled.Date>
+            <Styled.Date data-testid="book-publish-date">- {date}</Styled.Date>
           </Styled.Left>
-          <Styled.Right>{book.publisher}</Styled.Right>
+          <Styled.Right data-testid="book-publisher">
+            {book.publisher}
+          </Styled.Right>
         </Styled.Metadata>
         <Styled.Description
           isOverflowing={isOverflowing}
           showFullDetail={showFullDescription}
           maxLines={MAX_LINES}
+          data-testid="book-description"
         >
           <span ref={textRef}>{book.description}</span>
           {isOverflowing && (
-            <Button onClick={toggleShowFullDescription}>
+            <Button
+              data-testid="book-description-detailed-info"
+              onClick={toggleShowFullDescription}
+            >
               {!showFullDescription ? 'see more...' : 'see less...'}
             </Button>
           )}
         </Styled.Description>
       </Styled.Info>
-      <Hearth active={book.wishlisted} onClick={onWishListAppend}></Hearth>
+      <Hearth
+        data-testid="book-wishlist"
+        active={book.wishlisted}
+        onClick={onWishListAppend}
+      ></Hearth>
     </Styled.Book>
   );
 };

@@ -16,7 +16,7 @@ const { Provider } = store;
 const StateProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(rootReducer, {
     books: [],
-    whishList: [],
+    wishList: [],
     isLoading: false,
   });
 

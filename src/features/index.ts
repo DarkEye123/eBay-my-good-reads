@@ -13,7 +13,7 @@ export interface Action {
 }
 
 interface AppState {
-  whishList: Book[];
+  wishList: Book[];
   books: Book[];
   isLoading: boolean; // generalization of the loading state for whole app - derived from book request
 }
@@ -29,31 +29,31 @@ export interface AppCtx {
 const reducer = (state: AppState, action: Action) => {
   switch (action.type) {
     case 'loadWishListFromStore': {
-      const whishList = (action as LoadWishListFromStoreAction).payload;
-      return { ...state, whishList };
+      const wishList = (action as LoadWishListFromStoreAction).payload;
+      return { ...state, wishList };
     }
 
     case 'addToWishList': {
       const payload = (action as AddToWishListAction).payload;
-      let whishList;
-      const book = state.whishList.find(b => b === payload);
+      let wishList;
+      const book = state.wishList.find(b => b === payload);
       if (!book) {
         payload.wishlisted = true;
-        whishList = [...state.whishList, payload];
+        wishList = [...state.wishList, payload];
       } else {
         book.wishlisted = false;
-        whishList = state.whishList.filter(b => b !== book);
+        wishList = state.wishList.filter(b => b !== book);
       }
-      return { ...state, whishList };
+      return { ...state, wishList };
     }
 
     case 'removeFromWishList': {
       const payload = (action as RemoveFromWishListAction).payload;
-      const book = state.whishList.find(b => b === payload);
+      const book = state.wishList.find(b => b === payload);
       if (book) {
         book.wishlisted = false;
-        const whishList = state.whishList.filter(b => b !== book);
-        return { ...state, whishList };
+        const wishList = state.wishList.filter(b => b !== book);
+        return { ...state, wishList };
       }
       return state;
     }
@@ -61,10 +61,10 @@ const reducer = (state: AppState, action: Action) => {
     case 'fetchBooks.pending':
       return { ...state, isLoading: true };
     case 'fetchBooks.fulfilled':
-      // get books from whishlist if possible
+      // get books from wishlist if possible
       // TODO make it performant -- not a priority though
       const books = (action as FetchBooksActionFulfilled).payload.map(
-        book => state.whishList.find(b => b.id === book.id) || book,
+        book => state.wishList.find(b => b.id === book.id) || book,
       );
       return {
         ...state,
