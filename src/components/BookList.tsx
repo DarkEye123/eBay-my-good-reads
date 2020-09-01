@@ -37,7 +37,11 @@ export default () => {
         <>
           <VisuallyHidden>Search Results</VisuallyHidden>
           {state.books.map(book => (
-            <Book key={book.id} book={book}></Book>
+            <Book
+              key={book.id}
+              book={book}
+              onWishListAppend={() => actions.addToWishList(book)}
+            ></Book>
           ))}
         </>
       )}

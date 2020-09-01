@@ -2,12 +2,14 @@ import React, { FC, useState, useRef } from 'react';
 import Styled from './styles';
 import useTextOverflow from '../../hooks/useTextOverflow';
 import { Book as BookType } from '../../types';
+import { Hearth, Button } from '../common';
 
 interface BookProps {
   book: BookType;
+  onWishListAppend: () => void;
 }
 
-const Book: FC<BookProps> = ({ book }) => {
+const Book: FC<BookProps> = ({ onWishListAppend, book }) => {
   const MAX_LINES = 3;
 
   const date = new Date(book.published).getFullYear() || book.published;
@@ -20,7 +22,7 @@ const Book: FC<BookProps> = ({ book }) => {
   }
 
   return (
-    <Styled.Book>
+    <Styled.Book tabIndex={0} onKeyPress={onWishListAppend}>
       <div>
         <img alt={`${book.title} cover`} src={book.image} />
       </div>
@@ -50,6 +52,7 @@ const Book: FC<BookProps> = ({ book }) => {
           )}
         </Styled.Description>
       </Styled.Info>
+      <Hearth active={book.wishlisted} onClick={onWishListAppend}></Hearth>
     </Styled.Book>
   );
 };
