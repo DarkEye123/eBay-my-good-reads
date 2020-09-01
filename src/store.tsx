@@ -1,66 +1,12 @@
 // store.js
 import React, { createContext, useReducer, FC } from 'react';
-import { client as bookServiceClient, Book } from './services/BookService';
-
-interface Action {
-  type: string;
-  payload?: any;
-}
-
-interface AddToWishListAction {
-  payload: Book;
-}
-
-interface FetchBooksActionFulfilled {
-  payload: Book[];
-}
-
-interface WishListActionList {
-  addToWishList: (book: Book) => void;
-}
-
-interface BookListActionList {
-  fetchBooks: (type: string) => void;
-}
-
-interface AppState {
-  whishList: Book[];
-  books: Book[];
-  isLoading: boolean; // generalization of the loading state for whole app - derived from book request
-}
-
-type AppActions = WishListActionList & BookListActionList;
-
-interface AppCtx {
-  state: AppState;
-  actions: AppActions;
-}
+import { client as bookServiceClient } from './services/BookService';
+import { client as bookStorageClient } from './services/StorageService';
+import { Book } from './types';
+import { AppCtx, rootReducer } from './features';
 
 const store = createContext<AppCtx>({} as AppCtx);
 const { Provider } = store;
-
-const reducer = (state: AppState, action: Action) => {
-  switch (action.type) {
-    case 'addToWishList':
-      const whishList = [
-        ...state.whishList,
-        (action as AddToWishListAction).payload,
-      ];
-      return { ...state, whishList };
-    case 'fetchBooks.pending':
-      return { ...state, isLoading: true };
-    case 'fetchBooks.fulfilled':
-      return {
-        ...state,
-        isLoading: false,
-        books: (action as FetchBooksActionFulfilled).payload,
-      };
-    case 'fetchBooks.rejected':
-      return state;
-    default:
-      throw new Error();
-  }
-};
 
 /**
  * Little note:
@@ -68,14 +14,30 @@ const reducer = (state: AppState, action: Action) => {
  * I'm aware that e.g. redux has solutions similar to ones I have here (and of course, much more robust & bulletproof)
  */
 const StateProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, {
+  const [state, dispatch] = useReducer(rootReducer, {
     books: [],
     whishList: [],
     isLoading: false,
   });
 
-  function addToWishList(book: Book) {
-    dispatch({ type: 'addToWishList', payload: book });
+  async function addToWishList(book: Book) {
+    let savedBook = await bookStorageClient.load(book.id);
+    if (savedBook) {
+      removeFromWishList(book);
+    } else {
+      await bookStorageClient.persist(book);
+      dispatch({ type: 'addToWishList', payload: book });
+    }
+  }
+
+  async function removeFromWishList(book: Book) {
+    await bookStorageClient.remove(book.id);
+    dispatch({ type: 'removeFromWishList', payload: book });
+  }
+
+  async function loadWishListFromStore() {
+    const books = await bookStorageClient.loadAll();
+    dispatch({ type: 'loadWishListFromStore', payload: books });
   }
 
   // TODO - pagination?
@@ -95,6 +57,8 @@ const StateProvider: FC = ({ children }) => {
         actions: {
           addToWishList,
           fetchBooks,
+          loadWishListFromStore,
+          removeFromWishList,
         },
         state,
       }}
