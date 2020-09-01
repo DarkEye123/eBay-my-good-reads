@@ -9,6 +9,7 @@
     "axios": "^0.20.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
+    "localforage": "^1.9.0",
     "lodash.debounce": "^4.0.8",
     "polished": "^3.6.6",
     "prettier": "^2.1.1",
