@@ -49,6 +49,9 @@
     "extends": [
       "react-app",
       "plugin:jsx-a11y/recommended"
+    ],
+    "ignorePatterns": [
+      "cypress/**/*"
     ]
   },
   "browserslist": {
