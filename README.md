@@ -1,56 +1,47 @@
-# eBay React Coding Exercise Repo
+# If you wonder what this should do
 
-Thank you for your interest in eBay Engineering Team. This repo contains exercises used in eBay's recruitment process. These exercises are used for all frontend engineering roles, at all levels.
+see [exercise description](https://github.com/DarkEye123/eBay-my-good-reads/blob/master/README_original.md).
+You can check how application works on _this_ [video](https://github.com/DarkEye123/eBay-my-good-reads/raw/master/app_video.webm)
 
-Please complete the coding exercises below, upload code to a personal git repo, and share the link to your repo.
+## If you want to know how I proceeded in this project
 
-#### Please don't fork this repo. Download/Clone the repository, finish the exercise and upload it as a new repository in your github account. Share with us the link for that repository
+Whole project is in typescript - apart [Jest](https://jestjs.io/) unit tests and [Cypress](https://www.cypress.io/) E2E tests; these uses pure js.
 
-## Prerequisites
+1. ### State management
 
-To build and run the sample code please make sure you have the following prerequisites
+   I used react ctx with custom made state management similar to 'redux' solution.
 
-- NodeJs v13.12 or higher
-- Yarn
+   **Reasoning**:
+   I'm fully aware that for this example, simple prop passing would be an easier and cleaner solution. What I aimed to show was that I'm capable of implementing more complex state management without any 3rd party solution. In the real world, I'd use probably react-apollo and thus local cache queries for state management.
 
-## Getting Started
+2. ### Storage
 
-This repository contains a sample ReactJs application. When launched the sample web application displays a "search" box where you can enter a book name and press ENTER. Results matching your input will be displayed as a JSON String.  
-You can follow the instruction below to launch the sample application.
+   Project uses [localforage](https://localforage.github.io/localForage/) for a persistence of wishlisted books.
 
-1. Install dependencies using `yarn`
-2. Launch the web application using `yarn start`
-3. Navigate to [http://localhost:3000](http://localhost:3000)
-4. You can run tests using `yarn test`
+3. ### Components and accessibility
 
-Please feel free to make your own decisions about Web UI development. Though you are can use any UI library to build the web page, please see if you can avoid them. Also, you may use any state management technique.
+   All components are self-made and responsive - apart from loading SVG during data fetching and partially re-used search input. I applied techniques that should ensure that this app provides very good results regarding accessibility. During development I used [react-axe](https://github.com/dequelabs/react-axe) for most precise guideline following with eslint plugin: [jsx-a11y/recommended](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
 
-## Coding Exercise
+4. ### Styling
 
-Please complete the following coding exercises and submit your code to us.
+   After some thinking, I've decided to use [styled-components](https://styled-components.com/) for styling. I've provided an example of the [theme](https://github.com/DarkEye123/eBay-my-good-reads/blob/master/src/styled.d.ts) set-up with for typing support in typescript. To improve the power of css-in-js solution, I've decided to re-use some helpful ideas from sass world via package [polished](https://github.com/styled-components/polished)
 
-### Exercise 1: Design a web page in line with the mockup.
+5. ### Testing & Project Development tweaks
 
-> Requirement 1: As a user, I want to see a responsive page similar to the mockup. Sample JSON response is returned when the search term is entered and submitted in the search box.
+   [Jest](https://jestjs.io/) unit tests and [Cypress](https://www.cypress.io/) E2E tests;
+   `yarn test:unit`
+   `yarn test:e2e` -- make sure app is running before e2e tests by `yarn start`
+   I also uses [rollbar](https://rollbar.com/) for error reporting - and pre-commit hook doing linting + formatting running via [husky](https://github.com/typicode/husky#readme) and [lint-staged](https://github.com/okonet/lint-staged)
 
-> Requirement 2: As a user, I want to add books to my whislist displayed on right section of the web page.
+Bonus:
+There is small example of self-made hook and whole project uses FC based concept of writing.
 
-> Some helpful fields available in the response that helps you in building the mocks are: image (coverUrl), title, author, publisher, published & description
+#### Potential improvements
 
-![](./mockup.png)
+Project right now exceeds requirements from the [exercise description](https://github.com/DarkEye123/eBay-my-good-reads/blob/master/README_original.md). Though it doesn't mean
+there can't be improvement :)
 
-Please test your code for accessibility and make sure it is accessible.
-
-### Exercise 2: Add instant search capabilities
-
-> Requirement 1: As a user, I want to see book results as I am typing in the search field. I don't want to have to submit the form to view search results.
-
-Please make sure you are not spamming the API with too many calls. No more than one request every 500 ms.
-
-### Exercise 3: Unit tests
-
-Write unit tests for your code.
-
-## How to submit code?
-
-Please upload completed code to a personal git repository and share the link to your repository with us.
+1. usage of router for routing to separate page with wishlisted books
+2. caching of requests to show immediate responses and provide possibility of optimistic updates
+3. pagination or infinite loading -- I had to limit work on this project, so I didn't proceed with this solution, though I originally wanted.
+4. better visuals + usage of [motion](https://www.framer.com/api/motion/) for animations
