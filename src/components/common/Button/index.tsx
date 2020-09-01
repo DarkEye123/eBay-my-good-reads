@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 
-interface ButtonProps {
-  size?: 'small' | 'normal' | 'large';
-  outlined?: boolean;
-  color?: 'primary' | 'secondary';
-  loading?: boolean;
-}
-
 const Button = styled.button`
   padding: 0 0.75rem 0 0.75rem;
   height: 2rem;
