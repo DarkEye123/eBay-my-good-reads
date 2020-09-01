@@ -1,4 +1,5 @@
 import { client as networkServiceClient } from './NetworkService';
+import { client as reportServiceClient } from './ReportingService';
 import { Book } from '../types';
 
 interface BookAPIResponse {
@@ -44,10 +45,8 @@ class BookService {
       )) as BookListAPIResponse;
       return fromAPI(data.items || []);
     } catch (e) {
-      // TODO error
-      // 429 too many requests
-      // 400
       console.error('error', e);
+      reportServiceClient.logError(e.toString());
       throw e;
     }
   }

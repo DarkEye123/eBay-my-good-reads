@@ -61,7 +61,7 @@ export default () => {
   return (
     <StyledWishList data-testid="wishlist">
       <div>
-        <h2>Wish List</h2>
+        <h2>Wish List ({state.wishList.length})</h2>
         {/* menu needs menuitems, empty menu is bad for accessibility, that is why this strange solution */}
         {(state.wishList.length > 0 && (
           <ul role="menu" data-testid="wishlist">
